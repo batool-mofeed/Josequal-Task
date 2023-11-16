@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="place"
+            type="com.batool.josequaltask.model.PlaceModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="12dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_location"
+                app:tint="@color/black" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/place_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{place.placeName}"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    tools:text="Complex 145" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/place_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(place.latLang.longitude)+` - ` + String.valueOf(place.latLang.latitude)}"
+                    android:textSize="12sp"
+                    tools:text="31.8555622252 - 30.552526363" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

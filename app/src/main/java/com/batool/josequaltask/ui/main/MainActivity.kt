@@ -1,9 +1,11 @@
-package com.batool.josequaltask.main
+package com.batool.josequaltask.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.batool.josequaltask.BR
 import com.batool.josequaltask.R
 import com.batool.josequaltask.databinding.ActivityMainBinding
 import com.batool.josequaltask.model.PlaceModel
@@ -23,17 +25,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var currentCoordinates: LatLng
     private lateinit var placeModel: PlaceModel
+    private lateinit var placesAdapter: PlacesAdapter
 
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         with(binding) {
+            this?.setVariable(BR.viewModel, mainViewModel)
             this?.lifecycleOwner = this@MainActivity
             this?.executePendingBindings()
         }
         checkLocationPermission()
+        initPlacesRecyclerView()
+        mainViewModel.setModels()
+    }
 
+    private fun initPlacesRecyclerView() {
+        placesAdapter = PlacesAdapter() {
+            //click on place
+        }
+        binding?.placesRecycler?.adapter = placesAdapter
     }
 
     private fun checkLocationPermission() {
@@ -82,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun updateMapCamera(coordinates: LatLng = currentCoordinates) {
-        if (googleMap != null) {
+        if (::googleMap.isInitialized) {
             with(googleMap) {
                 moveCamera(CameraUpdateFactory.newLatLng(coordinates))
                 animateCamera(
