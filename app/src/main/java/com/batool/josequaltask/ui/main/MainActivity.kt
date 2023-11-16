@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.batool.josequaltask.BR
 import com.batool.josequaltask.R
 import com.batool.josequaltask.databinding.ActivityMainBinding
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -39,7 +41,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         checkLocationPermission()
         initPlacesRecyclerView()
-        mainViewModel.setModels()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        with(mainViewModel) {
+            lifecycleScope.launchWhenCreated {
+                placeModels.collect {
+                    if (it != null) {
+                        updateMapWithPlaces(it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateMapWithPlaces(places: List<PlaceModel>) {
+        googleMap.clear()
+        for (place in places) {
+            val markerOptions = MarkerOptions()
+                .position(place.latLang)
+                .title(place.placeName)
+            googleMap.addMarker(markerOptions)
+        }
     }
 
     private fun initPlacesRecyclerView() {
@@ -76,16 +100,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (::currentCoordinates.isInitialized) {
             updateMapCamera()
         }
+        mainViewModel.setModels()
     }
 
     private fun initMapStyle() {
         try {
             with(googleMap) {
-                setMinZoomPreference(14f)
+                setMinZoomPreference(13f)
+                enableMapGestures()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun enableMapGestures() {
+        googleMap.uiSettings.isZoomGesturesEnabled = true
+        googleMap.uiSettings.isScrollGesturesEnabled = true
+        googleMap.uiSettings.isRotateGesturesEnabled = true
+        googleMap.uiSettings.isTiltGesturesEnabled = true
     }
 
     private fun initCameraListener() {
@@ -101,7 +134,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         coordinates,
-                        18F
+                        13F
                     )
                 )
             }
