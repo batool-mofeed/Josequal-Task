@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689109215977",
+    "project_id": "josequel-task",
+    "storage_bucket": "josequel-task.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689109215977:android:ff9a0e0428444eb255de78",
+        "android_client_info": {
+          "package_name": "com.batool.josequaltask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ9gn9toxQn2K804M_2PQwh4GHXcyHMvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
