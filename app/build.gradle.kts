@@ -58,6 +58,11 @@ dependencies {
 
     //maps
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    //location helper
+    implementation("com.github.BirjuVachhani:locus-android:4.1.0")
+
+    //Location
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     //permission helper
     implementation("com.karumi:dexter:6.2.3")

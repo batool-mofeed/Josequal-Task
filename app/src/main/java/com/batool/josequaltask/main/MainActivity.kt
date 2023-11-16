@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.batool.josequaltask.R
 import com.batool.josequaltask.databinding.ActivityMainBinding
+import com.batool.josequaltask.model.PlaceModel
+import com.batool.josequaltask.utility.LocationHelper
 import com.batool.josequaltask.utility.PermissionsHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -17,8 +19,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var binding: ActivityMainBinding? = null
     private var mapView: View? = null
+
     private lateinit var googleMap: GoogleMap
     private lateinit var currentCoordinates: LatLng
+    private lateinit var placeModel: PlaceModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +38,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun checkLocationPermission() {
         PermissionsHelper(this).checkLocationPermissions(
-            onPermissionGranted = { initMap() },
+            onPermissionGranted = {
+                initMap()
+                getUserLocation()
+            },
             onPermissionDenied = { checkLocationPermission() }
         )
     }
@@ -56,7 +63,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (::currentCoordinates.isInitialized) {
             updateMapCamera()
         }
-
     }
 
     private fun initMapStyle() {
@@ -76,14 +82,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun updateMapCamera(coordinates: LatLng = currentCoordinates) {
-        with(googleMap) {
-            moveCamera(CameraUpdateFactory.newLatLng(coordinates))
-            animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    coordinates,
-                    18F
+        if (googleMap != null) {
+            with(googleMap) {
+                moveCamera(CameraUpdateFactory.newLatLng(coordinates))
+                animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        coordinates,
+                        18F
+                    )
                 )
-            )
+            }
+        }
+    }
+
+    private fun getUserLocation() {
+        LocationHelper(this).loadUserLocation { latLng ->
+            currentCoordinates = latLng
+            placeModel = PlaceModel(latLang = latLng)
+            updateMapCamera()
         }
     }
 

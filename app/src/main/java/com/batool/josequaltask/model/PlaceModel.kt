@@ -6,9 +6,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PlaceModel(
-    var primaryName: String = "",
-    var address: String = "",
-    var placeId: String = "",
     var placeName: String = "",
     var latLang: LatLng = LatLng(0.0, 0.0)
 ) : Parcelable
