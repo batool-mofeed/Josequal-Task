@@ -68,7 +68,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun initPlacesRecyclerView() {
         placesAdapter = PlacesAdapter() {
-            //click on place
+            //move map camera to clicked position
+            placeModel = PlaceModel(latLang = it.latLang)
+            updateMapCamera()
         }
         binding?.placesRecycler?.adapter = placesAdapter
     }
