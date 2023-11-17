@@ -16,12 +16,36 @@ class MainViewModel : ViewModel() {
 
     fun setModels() {
         _placeModels.value = listOf(
-            PlaceModel("Place 1", LatLng(32.016559647390686, 35.86971726138413)),
-            PlaceModel("Place 2", LatLng(31.985806881693907, 35.864953657786025)),
-            PlaceModel("Place 3", LatLng(31.96562298518118, 35.8862122064548)),
-            PlaceModel("Place 4", LatLng(31.967944255129197, 35.92124534815862)),
-            PlaceModel("Place 5", LatLng(31.946511728484744, 35.92368838481421)),
-            PlaceModel("Place 6", LatLng(31.942655830127585, 35.892612960644804))
+            PlaceModel(
+                "Place 1",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(32.016559647390686, 35.86971726138413)
+            ),
+            PlaceModel(
+                "Place 2",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(31.985806881693907, 35.864953657786025)
+            ),
+            PlaceModel(
+                "Place 3",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(31.96562298518118, 35.8862122064548)
+            ),
+            PlaceModel(
+                "Place 4",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(31.967944255129197, 35.92124534815862)
+            ),
+            PlaceModel(
+                "Place 5",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(31.946511728484744, 35.92368838481421)
+            ),
+            PlaceModel(
+                "Place 6",
+                "https://www.gstatic.com/webp/gallery3/1.sm.png",
+                LatLng(31.942655830127585, 35.892612960644804)
+            )
         )
     }
 }

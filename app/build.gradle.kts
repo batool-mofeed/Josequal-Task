@@ -69,4 +69,8 @@ dependencies {
 
     //permission helper
     implementation("com.karumi:dexter:6.2.3")
+
+    //coil
+    implementation("io.coil-kt:coil:2.5.0")
+
 }

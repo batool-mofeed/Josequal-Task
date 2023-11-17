@@ -10,6 +10,7 @@ import com.batool.josequaltask.BR
 import com.batool.josequaltask.R
 import com.batool.josequaltask.databinding.ActivityMainBinding
 import com.batool.josequaltask.model.PlaceModel
+import com.batool.josequaltask.ui.main.placedetails.PlaceDetailsDialog
 import com.batool.josequaltask.utility.LocationHelper
 import com.batool.josequaltask.utility.PermissionsHelper
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -28,6 +30,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var currentCoordinates: LatLng
     private lateinit var placeModel: PlaceModel
     private lateinit var placesAdapter: PlacesAdapter
+
+    var markers: HashMap<String, PlaceModel> = HashMap<String, PlaceModel>()
+
 
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -62,7 +67,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             val markerOptions = MarkerOptions()
                 .position(place.latLang)
                 .title(place.placeName)
-            googleMap.addMarker(markerOptions)
+            val marker = googleMap.addMarker(markerOptions)
+            if (marker != null) {
+                markers[marker.id] = place
+            }
         }
     }
 
@@ -101,6 +109,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         initCameraListener()
         if (::currentCoordinates.isInitialized) {
             updateMapCamera()
+        }
+        googleMap.setOnMarkerClickListener { marker ->
+            val place: PlaceModel? = markers[marker.id]
+            if (place != null) {
+                PlaceDetailsDialog.newInstance(place).show(supportFragmentManager, "")
+            }
+            true
         }
         mainViewModel.setModels()
     }
