@@ -1,5 +1,6 @@
 package com.batool.josequaltask.ui.main
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.batool.josequaltask.base.BaseRecyclerViewAdapter
@@ -21,10 +22,11 @@ class PlacesAdapter(
             with(binding) {
                 val item = items[position]
                 place = item
-                executePendingBindings()
                 mainContainer.setOnClickListener {
                     onPlaceClicked(item)
+                    Log.e("TAG", "onBind: " + "cccffffffff" )
                 }
+                executePendingBindings()
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.batool.josequaltask.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,10 +29,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
     private lateinit var currentCoordinates: LatLng
-    private lateinit var placeModel: PlaceModel
     private lateinit var placesAdapter: PlacesAdapter
 
-    var markers: HashMap<String, PlaceModel> = HashMap<String, PlaceModel>()
+    var markers: HashMap<String, PlaceModel> = HashMap()
 
 
     private val mainViewModel by viewModels<MainViewModel>()
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initPlacesRecyclerView() {
         placesAdapter = PlacesAdapter() {
             //move map camera to clicked position
-            placeModel = PlaceModel(latLang = it.latLang)
+            currentCoordinates = it.latLang
             updateMapCamera()
         }
         binding?.placesRecycler?.adapter = placesAdapter
@@ -146,6 +146,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun updateMapCamera(coordinates: LatLng = currentCoordinates) {
         if (::googleMap.isInitialized) {
+            Log.e("TAG", "onBind: " + "nnnnnnnnnnnnnnn" )
+
             with(googleMap) {
                 moveCamera(CameraUpdateFactory.newLatLng(coordinates))
                 animateCamera(
@@ -161,7 +163,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getUserLocation() {
         LocationHelper(this).loadUserLocation { latLng ->
             currentCoordinates = latLng
-            placeModel = PlaceModel(latLang = latLng)
             updateMapCamera()
         }
     }

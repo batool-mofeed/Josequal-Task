@@ -35,8 +35,19 @@ class PlaceDetailsDialog(
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        // Set minimum width and height for the dialog
+        val dialogWidth = resources.getDimensionPixelSize(R.dimen.dialog_min_width)
+        val dialogHeight = resources.getDimensionPixelSize(R.dimen.dialog_min_height)
+
+        dialog?.window?.setLayout(dialogWidth, dialogHeight)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.place = place
         initClicks()
     }
 
@@ -48,10 +59,7 @@ class PlaceDetailsDialog(
         }
     }
 
-
     companion object {
-        fun newInstance(
-            place: PlaceModel
-        ) = PlaceDetailsDialog(place)
+        fun newInstance(place: PlaceModel) = PlaceDetailsDialog(place)
     }
 }
