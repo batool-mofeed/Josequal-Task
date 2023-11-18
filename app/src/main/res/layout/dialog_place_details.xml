@@ -31,15 +31,17 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_close"
-                app:loadImage="@{place.placeImage}" />
+                android:tint="@color/black" />
 
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:scaleType="center"
+            app:loadImage="@{place.placeImage}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -51,6 +53,15 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/place_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@{String.valueOf(place.latLang.longitude)+` - ` + String.valueOf(place.latLang.latitude)}"
+            android:textSize="12sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -6,7 +6,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.batool.josequaltask.BR
 import com.batool.josequaltask.R
 import com.batool.josequaltask.databinding.ActivityMainBinding
@@ -20,6 +22,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.data.kml.KmlLayer
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -45,16 +50,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             this?.executePendingBindings()
         }
         checkLocationPermission()
-        initPlacesRecyclerView()
         observeViewModel()
     }
 
     private fun observeViewModel() {
         with(mainViewModel) {
-            lifecycleScope.launchWhenCreated {
-                placeModels.collect {
-                    if (it != null) {
-                        updateMapWithPlaces(it)
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    placeModels.collect {
+                        if (it != null) {
+                            updateMapWithPlaces(it)
+                        }
                     }
                 }
             }
@@ -72,6 +78,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 markers[marker.id] = place
             }
         }
+        loadKmlLayers()
     }
 
     private fun initPlacesRecyclerView() {
@@ -86,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun checkLocationPermission() {
         PermissionsHelper(this).checkLocationPermissions(
             onPermissionGranted = {
+                initPlacesRecyclerView()
                 initMap()
                 getUserLocation()
             },
@@ -118,12 +126,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }
         mainViewModel.setModels()
+        loadKmlLayers()
     }
 
     private fun initMapStyle() {
         try {
             with(googleMap) {
-                setMinZoomPreference(13f)
+                setMinZoomPreference(10f)
                 enableMapGestures()
             }
         } catch (e: Exception) {
@@ -146,7 +155,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun updateMapCamera(coordinates: LatLng = currentCoordinates) {
         if (::googleMap.isInitialized) {
-            Log.e("TAG", "onBind: " + "nnnnnnnnnnnnnnn" )
 
             with(googleMap) {
                 moveCamera(CameraUpdateFactory.newLatLng(coordinates))
@@ -166,5 +174,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             updateMapCamera()
         }
     }
+
+    private fun loadKmlLayers() {
+        try {
+            val kmlFiles = listOf(
+                R.raw.marker_1_rectangle,
+                R.raw.marker_2_circle,
+                R.raw.marker_3_triangle
+            )
+
+            for (kmlFile in kmlFiles) {
+                val kmlLayer = KmlLayer(googleMap, kmlFile, this)
+                kmlLayer.addLayerToMap()
+            }
+
+            Log.e("KML", "All layers added successfully")
+
+        } catch (e: IOException) {
+            Log.e("KML", "Error loading KML layers: ${e.message}")
+        }
+    }
+
 
 }

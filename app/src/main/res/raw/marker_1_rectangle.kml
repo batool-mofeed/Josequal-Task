@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <name>Rectangle</name>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              35.87021726138413,32.017059647390686,100   <!-- Top right corner -->
+              35.87021726138413,32.016059647390686,100   <!-- Bottom right corner -->
+              35.86921726138413,32.016059647390686,100   <!-- Bottom left corner -->
+              35.86921726138413,32.017059647390686,100   <!-- Top left corner -->
+              35.87021726138413,32.017059647390686,100   <!-- Close the loop -->
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>

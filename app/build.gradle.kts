@@ -73,4 +73,8 @@ dependencies {
     //coil
     implementation("io.coil-kt:coil:2.5.0")
 
+    //Kml
+    implementation("com.google.maps.android:android-maps-utils:2.0.3")
+
+
 }
