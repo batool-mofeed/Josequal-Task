@@ -21,7 +21,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.collections.MarkerManager
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -38,6 +40,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     var markers: HashMap<String, PlaceModel> = HashMap()
 
+    //added to handle click when there is kml layers
+    lateinit var markerManager: MarkerManager
+    lateinit var markerCollection: MarkerManager.Collection
 
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -74,6 +79,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 .position(place.latLang)
                 .title(place.placeName)
             val marker = googleMap.addMarker(markerOptions)
+            markerCollection.addMarker(markerOptions)
             if (marker != null) {
                 markers[marker.id] = place
             }
@@ -113,20 +119,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+
+        //added to handle click when there is kml layers
+        markerManager = MarkerManager(googleMap)
+        markerCollection = markerManager.newCollection()
+
         initMapStyle()
         initCameraListener()
         if (::currentCoordinates.isInitialized) {
             updateMapCamera()
         }
+
         googleMap.setOnMarkerClickListener { marker ->
-            val place: PlaceModel? = markers[marker.id]
-            if (place != null) {
-                PlaceDetailsDialog.newInstance(place).show(supportFragmentManager, "")
-            }
+            handleMarkerClick(marker)
+            true
+        }
+        markerCollection.setOnMarkerClickListener {
+            handleMarkerClick(it)
             true
         }
         mainViewModel.setModels()
         loadKmlLayers()
+
+    }
+
+    private fun handleMarkerClick(marker: Marker) {
+        val place: PlaceModel? = markers[marker.id]
+        if (place != null) {
+            Log.d("MarkerClick", "Marker clicked: ${place.placeName}")
+            PlaceDetailsDialog.newInstance(place).show(supportFragmentManager, "")
+        }
     }
 
     private fun initMapStyle() {
@@ -161,7 +183,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         coordinates,
-                        13F
+                        15F
                     )
                 )
             }
@@ -184,7 +206,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
 
             for (kmlFile in kmlFiles) {
-                val kmlLayer = KmlLayer(googleMap, kmlFile, this)
+                val kmlLayer =
+                    KmlLayer(googleMap, kmlFile, this, markerManager, null, null, null, null)
                 kmlLayer.addLayerToMap()
             }
 
