@@ -1,5 +1,7 @@
 package com.batool.josequaltask.ui.main
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,10 +18,14 @@ import com.batool.josequaltask.model.PlaceModel
 import com.batool.josequaltask.ui.main.placedetails.PlaceDetailsDialog
 import com.batool.josequaltask.utility.LocationHelper
 import com.batool.josequaltask.utility.PermissionsHelper
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -145,7 +151,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun handleMarkerClick(marker: Marker) {
         val place: PlaceModel? = markers[marker.id]
         if (place != null) {
-            Log.d("MarkerClick", "Marker clicked: ${place.placeName}")
+            loadImageOnMap(place.latLang, place.placeImage)
             PlaceDetailsDialog.newInstance(place).show(supportFragmentManager, "")
         }
     }
@@ -216,5 +222,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: IOException) {
             Log.e("KML", "Error loading KML layers: ${e.message}")
         }
+    }
+
+    private fun loadImageOnMap(latLng: LatLng, imageUrl: String) {
+        Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    // Add a marker with the image to the map
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.fromBitmap(resource))
+                    )
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
     }
 }

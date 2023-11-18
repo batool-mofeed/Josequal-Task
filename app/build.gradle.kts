@@ -76,5 +76,9 @@ dependencies {
     //Kml
     implementation("com.google.maps.android:android-maps-utils:2.0.3")
 
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+
 
 }
