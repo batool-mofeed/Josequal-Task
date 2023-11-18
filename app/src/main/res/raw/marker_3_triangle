@@ -1,38 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <!-- Center Marker -->
     <Placemark>
-      <name>Center Marker</name>
-      <Point>
-        <coordinates>35.8862122064548,31.96562298518118,100</coordinates>
-      </Point>
-    </Placemark>
-
-    <!-- Even Larger Triangle around Center Marker -->
-    <Placemark>
-      <name>Even Larger Triangle around Marker</name>
+      <name>Triangle around Marker</name>
       <styleUrl>#bluePolyStyle</styleUrl>
       <Polygon>
         <tessellate>1</tessellate>
         <outerBoundaryIs>
           <LinearRing>
             <coordinates>
-              35.8862122064548,31.966640,100   <!-- Even Larger Vertex 1 -->
-              35.88629707111974,31.96460599259079,100   <!-- Even Larger Vertex 2 -->
-              35.88412747111974,31.96460599259079,100   <!-- Even Larger Vertex 3 -->
-              35.8862122064548,31.966640,100   <!-- Closing point to complete the even larger triangle -->
+              35.8862122064548,31.966640,100
+              35.88629707111974,31.96460599259079,100
+              35.88412747111974,31.96460599259079,100
+              35.8862122064548,31.966640,100
             </coordinates>
           </LinearRing>
         </outerBoundaryIs>
       </Polygon>
     </Placemark>
 
-    <!-- Style for Blue Polygons -->
     <Style id="bluePolyStyle">
       <PolyStyle>
-        <color>7D0000FF</color> <!-- Blue color with alpha (7D is the alpha value, 00 is the blue value, FF is the green value, 00 is the red value) -->
-      </PolyStyle>
+        <color>7D0000FF</color>
+         </PolyStyle>
     </Style>
   </Document>
 </kml>
